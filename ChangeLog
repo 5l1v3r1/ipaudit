@@ -1,0 +1,107 @@
+ipaudit 1.0
+Sep 4, 2004
+-  Resumed development on ipaudit (binary-only).  Previously the ipaudit binary
+   development was carried along in the ipaudit-web branch.  Now the intention
+   is to keep the branches separate and have ipaudit-web require ipaudit.
+   For changelog info betwen Jan 19, 2001 and now see ipaudit-web changelog.
+
+-  ipaudit:  Removed obsolete(?) DLT_LINUX from pcap ethernet types.  Fixed
+   Daemon mode bug caused by misuse of waitpid() and pause().
+
+ipaudit 0.95
+
+Jan 19, 2001
+-  ipaudit:  corrected for packet double count / double write
+               when packets travels between two monitored interfaces.
+             added -M option to turn off correction for multiple
+             devices.
+            
+
+Jan 2, 2001
+-  ipaudit:  added config file option
+
+Dec 21, 2000
+-  ipaudit:  added multiple interface read - "ipaudit eth0:eth1"
+             Use of select() to implement multiple reads
+             fixes exit problem in a different way from yesterday.
+
+Dec 20, 2000
+-  ipaudit: fixed ihandler() to exit cleanly (no more core dumps?) by
+   using fcntl() to set interface file descriptor to O_NONBLOCK
+-  ipstrings: fixed handling of DLT_NULL packet type (needed to
+   at 'PacketOffset' to 'caplen'
+
+Dec 10, 2000
+-  ipaudit: expand '-l' (local) option to allow more flexible ip ranges.
+-  ipstrings:  add '-z' (size) to print ip packet size.
+
+Oct 17, 2000
+-  ipaudit: add 'C' option to preserve icmp packet type/code bytes
+   in printed source port field.
+-  ipaudit: add 'I' option to dump all traffic from a single IP address.
+-  ipaudit: separate ipaudit distribution into ipaudit-bin (just C code)
+   and a future ipaudit-web (cron and cgi scripts).  Currently
+   cron and cgi scripts available in ipaudit-0.93b3.tgz
+
+Sep 29, 2000
+-  fixed long standing problem when writing ICMP packets (-w);
+   first 4 bytes of ICMP header were mistakenly zeroed.
+
+Sep 19, 2000
+-  total.c - added -d, -v, -N options
+
+Aug 23, 2000
+-  changed from gif to png (thanx andyz)
+
+Aug 21, 2000
+- ipaudit.c: cleaned up Usage message
+- ipaudit.c: added -S option to print ip addresses in short format
+- Removed dependence upon GNU date in all scripts.  Perl scripts use
+    &Date() subroutine, shell scripts call new pdate.c.
+
+Aug 14, 2000
+- removed from cronclean bash specific construct:  ${HTML_DAY:-${DEF_HTML_DAY}}
+
+ipaudit 0.93b3
+July 25, 2000
+- re-organized distribution
+- added scripts for generating web site displaying ipaudit statistics
+
+ipauidt 0.92
+Jun 20, 2000
+- print ethernet packets with -e option
+- prevent memory overflow due to packet storms with -L option
+- sort output by ip address or intial connection time if -t option.
+- include total.c, ipstrings.c utilies in distribution, and
+     assorted perl scripts - dnslist, ipf, icf (total utility replaces collate)
+- fix reading of some devices such as ppp (add correct offset to ip packet structure)
+- use separate structures for ip and eth packet cracking.
+- hopefully removed code which made BSD OS not compile.
+- Packet length no longer includes ethernet header
+- correctly take into account ip header length (option field)
+- debug option also prints version info, for easier debug reports
+
+
+ipaudit 0.91.2
+Feb 1, 2000
+   - added -m option by request (to switch off promisc mode)
+   - try 'call pcap_close()' from ihandler(), see if it helps signal
+     trouble
+Jan 24, 2000
+   - added collate utility
+ipaudit 0.91.1
+Jan 19, 2000
+   - Fixed -p option, was not reading udp port options correctly
+     (thanks James Stephens)
+
+ipaudit 0.91
+Jan 7, 2000
+   - Fix -c option in getopt() (thanks Bob Maccione)
+   - Add -t option to list opening and closing connection time
+         (suggested by Aivo Kalu)
+   - Add -b option to write output in binary format (experimental)
+   - Add -d option to switch on debugging output
+
+ipaudit 0.9
+Nov 18, 1999
+   Initial Release

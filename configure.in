@@ -1,0 +1,88 @@
+dnl Process this file with autoconf to produce a configure script.
+
+dnl  jr, following jh
+
+                                                                                
+AC_INIT(src/ipaudit.c)
+AM_INIT_AUTOMAKE(ipaudit, 1.0BETA2)
+
+echo
+echo "Configuring for ipaudit ..."
+                                                                                
+AM_CONFIG_HEADER(src/config.h)
+
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_CHECK_LIB(m, sqrt)
+AC_CHECK_LIB(nsl, gethostent)
+
+#  Pcap library
+AC_CHECK_LIB(pcap,pcap_datalink,,LIBPCAP="no")
+if test "$LIBPCAP" = "no"; then
+   echo
+   echo "  ************************************************************"
+   echo "    FATAL ERROR: The required libpcap library was not found!  "
+   echo "                 You probably need the pcap package for your  "
+   echo "                 system or the pcap source code from          "
+   echo "                 http://www.tcpdump.org.                      "
+   echo "  ************************************************************"
+   echo
+   exit 1
+fi
+
+
+#  Pcap include files (need 'break' to stop search after first is found).
+AC_CHECK_HEADERS(pcap.h pcap/pcap.h,break,INCPCAP="no")
+if test "$INCPCAP" = "no"; then
+   echo
+   echo "  ***************************************************************"
+   echo "    FATAL ERROR: The required pcap header files were not found!  "
+   echo "                 You probably need the pcap development package  "
+   echo "                 for your system or the pcap source code from    "
+   echo "                 http://www.tcpdump.org.                         "
+   echo "  ***************************************************************"
+   echo
+   exit 1
+fi
+
+
+#  Optional inclusion of mysql
+AC_ARG_WITH(mysql,
+  [  --with-mysql            Enable mysql support.],
+  [case "${withval}" in
+    yes) mysql=yes ;;
+    no)  mysql=no ;;
+    *)   AC_MSG_ERROR([mysql has bad value, ${withval}, use either "yes" or "no"]) ;;
+   esac],
+   [mysql=no])
+
+#  Check mysql lib
+if test "$mysql" = "yes"; then
+   AC_CHECK_LIB(mysqlclient,mysql_init,, LIBMYSQL="no", )
+   if test "$LIBMYSQL" = "no"; then
+     echo
+     echo "  ***************************************************************"
+     echo "    FATAL ERROR: you specified the option \"--with-mysql\" for   "
+     echo "    mysql support, but the mysql *library* was not found.        "
+     echo "    You can re-run \"./configure\" without the option            "
+     echo "    \"--with-mysql\" to create the non-mysql version of ipaudit. "
+     echo "  ***************************************************************"
+     echo
+     exit 1
+   fi
+   #  Check mysql headers
+   AC_CHECK_HEADERS(mysql.h mysql/mysql.h,break,INCMYSQL="no")
+   if test "$INCMYSQL=" = "no"; then
+     echo
+     echo "  ***************************************************************"
+     echo "    FATAL ERROR: you specified the option \"--with-mysql\" for   "
+     echo "    mysql support, but the mysql *include files* were not found. "
+     echo "    You can re-run \"./configure\" without the option            "
+     echo "    \"--with-mysql\" to create the non-mysql version of ipaudit. "
+     echo "  ***************************************************************"
+     echo
+     exit 1
+   fi
+fi
+
+AC_OUTPUT(Makefile src/Makefile doc/Makefile)

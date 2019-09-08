@@ -1,0 +1,97 @@
+IPAUDIT
+==========================
+
+
+Contents
+========
+IPAUDIT listens to a network device in promiscuis mode, and records
+of every 'connection', each conversation between two ip addresses.  A unique
+connection is determined by the ip addresses of the two machines, the 
+protocol used between them and the port numbers (if they are communicating
+via udp or tcp).
+
+It uses a hash table to keep track of the number of bytes and packets
+in both directions.  When IPAUDIT receives a signal SIGTERM (kill)
+or SIGINT (kill -2, usually the same as a Control-C), it stops collecting
+data and write the tabulated results.
+
+This package also includes some companion C programs.  See the CONTENTS file
+for more info.
+
+
+Suggested Usage
+===============
+IPAUDIT can be used to monitor network activity for a variety of purposes.
+It has proved useful for monitoring intrusion detection, bandwidth consumption 
+and denial of service attacks.
+
+We run it in shifts.  Every 30 minutes launch an new instance of IPAUDIT
+in the background and kill the previous instance.  Before the previous
+instance dies it writes a file describing the network activity for the
+past 30 minutes.  Perl scripts then parse this file and make a Web
+viewable report.  It currently monitors a 45MB link averaging at about
+1/3 capacity on a Pentium II/333 running Linux 2.2.13.  Average CPU
+usage is at about 10%, and peaks at around %20 on the half hour.
+
+IPAUDIT can also be used with IPAUIT-WEB, and collection of cron and 
+web-cgi scripts for gathering data and making reports (NOTE: The separate 
+IPAUDIT-WEB distruction not yet available.  You can however obtain
+web-cgi scripts from ipaudit-0.93b4.tgz).
+
+
+Installing
+==========
+(1) You must first have pcap library installed (see Requirements below).
+(2) Type 'make' to produce executables, located in the src/ directory.
+(3) Copy man pages ipaudit.1 to your man page directory.
+(4) optionally copy man page ipstrings.1, total.1 from man/ to system man page directory.
+(5) 'ipaudit' typically must be run as root to read the network interface.
+
+
+Documentation
+=============
+See the man pages ipaudit.1, ipstrings.1, total.1 and web page 
+   http://sp.uconn.edu/~jrifkin/ipaudit/
+
+
+Contact Info
+============
+Jon Rifkin <jon.rifkin@uconn.edu>.  The most recent version of
+IPAUDIT is at
+
+   http://ipaudit.sf.net
+
+If you are having trouble with ipaudit, please send output 
+when running with the -d option.
+
+
+Requirements
+============
+IPAUDIT uses the pcap library which is available from the
+URL http://www-nrg.ee.lbl.gov/nrg.html.  It is installed
+by default in some Unix environments, and it available
+as an rpm from Red Hat.
+
+
+Recommendations
+===============
+If you save raw pcap data files (using the -w
+option).  Many programs can read such files
+including ipstrings (included with ipaudit, see
+the 'ipstrings' man page), tcpdump (the original
+pcap program, http://www.tcpdump.org) and
+ethereal (http://www.zing.org).  But remember
+that 'ipstrings' included with ipaudit can also
+read these files.  See the 'ipstrings' man page.
+
+You might find the included program 'total' useful
+for performing some simple queries on ipaudit's output 
+files.  See the 'total' man page.
+
+
+License
+=======
+IPAUDIT is covered by the GNU General Public Licensse. 
+See the file COPYING for copying permission.
+
+IPAUDIT is Copyright (c) 1999-2004 by Jonathan Rifkin
